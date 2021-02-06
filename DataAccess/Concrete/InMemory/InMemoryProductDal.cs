@@ -4,6 +4,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using DataAccess.Abstract;
 using Entities.Concrete;
+using Entities.DTOs;
 
 namespace DataAccess.Concrete.InMemory
 {
@@ -68,6 +69,11 @@ namespace DataAccess.Concrete.InMemory
         public List<Product> GetAllbyCategory(int categoryId)
         {
             return _products.Where(p => p.CategoryId == categoryId).ToList();
+        }
+
+        public List<ProductDetailDto> GetProductDetailDtos()
+        {
+            throw new NotImplementedException();
         }
 
         public void Update(Product product)

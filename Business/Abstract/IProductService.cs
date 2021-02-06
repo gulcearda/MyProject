@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Entities.Concrete;
+using Entities.DTOs;
 
 namespace Business.Abstract
 {
@@ -11,5 +12,8 @@ namespace Business.Abstract
         //category idsine göre ürünleri getiren sistem
         List<Product> GetByUnitPrice(decimal min, decimal max);
         //e ticarette min şu fiyat ve şu fiyat aralığını getir dedik.
+
+        List<ProductDetailDto> GetProductDetailDtos();
+
     }
 }
