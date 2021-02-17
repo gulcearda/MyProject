@@ -8,8 +8,11 @@ namespace DataAccess.Concrete.EntityFramework
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Server=175.45.2.12");
+            optionsBuilder.UseSqlServer(@"Server=localhost,master(sa); Database=Northwind; Trusted_Connection=true");
+            //192.168.65.0/24
         }
+
+        
 
         public DbSet<Products> Products { get; set; }
 

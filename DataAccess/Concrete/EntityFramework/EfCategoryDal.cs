@@ -29,7 +29,7 @@ namespace DataAccess.Concrete.EntityFramework
             throw new NotImplementedException();
         }
 
-        public List<Category> GetAllbyCategory(int categoryId)
+        public new List<Category> GetAllbyCategory(int categoryId)
         {
             throw new NotImplementedException();
         }
