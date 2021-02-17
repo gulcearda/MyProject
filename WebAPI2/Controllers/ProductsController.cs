@@ -22,6 +22,10 @@ namespace WebAPI.Controllers
         }
 
 
+        [HttpPost]
+        public 
+
+
         //loosely coupled
         //naming convention
         //IProductService _productService;

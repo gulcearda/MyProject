@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using Business.Abstract;
 using Business.Constants;
+using Business.ValidationRules.FluentValidation;
+using Core.Aspects.Autofac.Validation;
+using Core.CrossCuttingConcerns.Validation;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
 using Entities.DTOs;
+using FluentValidation;
 
 namespace Business.Concrete
 {
@@ -20,14 +24,32 @@ namespace Business.Concrete
             _productDal = productDal;
         }
 
+        [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
+
+            //loglama
+            //cacheremove
+            //performance
+            //transaction
+            //authorization
             //business codes
-            if (product.ProductName.Length < 2)
-            {
-                //magic strings
-                return new ErrorResult(Messages.ProductNameInvalid);
-            }
+
+
+
+            //GEREK YOK BUNLARA ARTIK SİLDİK---------------------
+            //if (product.UnitPrice <= 0)
+            //{
+            //    return new ErrorResult(Messages.ProductNameInvalid);
+            //}
+
+            ////bu 2 if validationdur ve heryerde kullanılmak
+            ////isteneceği için ayrı bir yerde kodlanır buraya çağırılır.
+            //if (product.ProductName.Length < 2)
+            //{
+            //    //magic strings
+            //    return new ErrorResult(Messages.ProductNameInvalid);
+            //}
             //if çalışırsa biter çalışmazsa altakine geçer ve biter. Else'e gerek yok.
 
             _productDal.Add(product);

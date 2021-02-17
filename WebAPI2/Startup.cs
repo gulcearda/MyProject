@@ -2,6 +2,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Business.Abstract;
+using Business.Concrete;
+using DataAccess.Abstract;
+using DataAccess.Concrete.EntityFramework;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,7 +29,14 @@ namespace WebAPI2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //Aop
+            //Autofac, Ninject, CastleWindsor, StructureMap, LightInject, DryInject,
+            //AoP
+            //Postsharp
             services.AddControllers();
+            //services.AddSingleton<IProductService, ProductManager>();
+            //services.AddSingleton<IProductDal, EfProductDal>();
+            //Autofac kullanır
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
