@@ -23,5 +23,8 @@ namespace Business.Abstract
 
         IResult Add(Product product);
         //voide Iresult dedik
+        IResult Update(Product product);
+
+
     }
 }

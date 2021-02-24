@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Business.Abstract;
+using Business.CCS;
 using Business.Constants;
 using Business.ValidationRules.FluentValidation;
 using Core.Aspects.Autofac.Validation;
 using Core.CrossCuttingConcerns.Validation;
+using Core.Utilities.Business;
 using Core.Utilities.Results;
 using DataAccess.Abstract;
 using Entities.Concrete;
@@ -18,15 +21,46 @@ namespace Business.Concrete
         //injection bu
 
         IProductDal _productDal;
+        ICategoryService _categoryService;
+        //ILogger _logger;
 
-        public ProductManager(IProductDal productDal)
+        public ProductManager(IProductDal productDal, ICategoryService categoryService)
         {
             _productDal = productDal;
+            _categoryService = categoryService;
+            //_logger = logger;
         }
 
         [ValidationAspect(typeof(ProductValidator))]
         public IResult Add(Product product)
         {
+            //eğer mevcut kategori sayısı 15'i geçtiyse sisteme yeni ürün eklenemez.
+
+            IResult result = BusinessRules.Run(CheckIfProductCountOfCategoryCorrect(product.CategoryId),
+                CheckIfProductNameExists(product.ProductName),CheckIFCategoryLimitExceeded());
+
+            if (result !=null)
+            {
+                return result;
+            }
+            _productDal.Add(product);
+
+            return new SuccessResult(Messages.ProductAdded);
+
+
+
+            //_logger.Log();
+            //try
+            //{
+            //    //bu kodu dene dersin olmazsa hata olursa ne yapsın diye
+            //    //aşağıda söyleriz yazarız.
+            //}
+            //catch (Exception exception)
+            //{
+            //    _logger.Log();
+            //}
+            //return new ErrorResult();
+            
 
             //loglama
             //cacheremove
@@ -52,9 +86,7 @@ namespace Business.Concrete
             //}
             //if çalışırsa biter çalışmazsa altakine geçer ve biter. Else'e gerek yok.
 
-            _productDal.Add(product);
 
-            return new SuccessResult(Messages.ProductAdded);
         }
 
         public IDataResult<List<Product>> GetAll()
@@ -95,6 +127,50 @@ namespace Business.Concrete
             }
             return new SuccessDataResult<List<ProductDetailDto>>(_productDal.GetProductDetailDtos());
             
+        }
+
+        [ValidationAspect(typeof(ProductValidator))]
+        public IResult Update(Product product)
+        {
+            var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId);
+            if (result =< 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            throw new NotImplementedException();
+        }
+
+        private IResult CheckIfProductCountOfCategoryCorrect(int categoryId)//Product productta yazılabilirdi
+        {
+            //select count(*) from products where categoryId=1
+            //aşağıdaki kod üstekini çalıştırır.
+            var result = _productDal.GetAll(p => p.CategoryId == categoryId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIfProductNameExists(string productName)
+        {
+            //any var mı demektir. Şuna uyan kayıt var mı demektir. Bool döndürür
+            var result = _productDal.GetAll(p => p.ProductName == productName).Any();
+            if(result == true)
+            {
+                return new ErrorResult(Messages.ProductNameAlreadyExists);
+            }
+            return new SuccessResult();
+        }
+
+        private IResult CheckIFCategoryLimitExceeded()
+        {
+            var result = _categoryService.GetAll();
+            if (result.Data.Count>15)
+            {
+                return new ErrorResult(Messages.CategoryLimitExceded);
+            }
+            return new SuccessResult();
         }
     }
 }
