@@ -146,13 +146,12 @@ namespace Business.Concrete
         [CacheRemoveAspect("IProductService.Get")] //Iproductservice teki tüm getleri sil
         public IResult Update(Product product)
         {
+            var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId).Count;
+            if (result >= 10)
+            {
+                return new ErrorResult(Messages.ProductCountOfCategoryError);
+            }
             throw new NotImplementedException();
-            //var result = _productDal.GetAll(p => p.CategoryId == product.CategoryId);
-            //if (result >= 10)
-            //{
-            //    return new ErrorResult(Messages.ProductCountOfCategoryError);
-            //}
-            //throw new NotImplementedException();
         }
 
 
