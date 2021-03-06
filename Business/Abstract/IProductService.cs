@@ -25,6 +25,8 @@ namespace Business.Abstract
         //voide Iresult dedik
         IResult Update(Product product);
 
+        IResult AddTransactionTest(Product product);
 
+        //RESTFULL --> HTTP -->
     }
 }
