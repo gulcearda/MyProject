@@ -21,19 +21,41 @@ namespace WebAPI.Controllers
             return "Merhaba";
         }
 
-
-        [HttpPost]
-        public 
-
-
         //loosely coupled
         //naming convention
-        //IProductService _productService;
+        IProductService _productService;
 
-        //public ProductsController(IProductService productService)
-        //{
-        //    _productService = productService;
-        //}
+        public ProductsController(IProductService productService)
+        {
+            _productService = productService;
+        }
+
+        [HttpGet("getbyid")]
+        public IActionResult GetById(int id)
+        {
+            var result = _productService.GetById(id);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+        [HttpGet("getbycategory")]
+        public IActionResult GetByCategory(int categoryId)
+        {
+            var result = _productService.GetAllByCategoryId(categoryId);
+            if (result.Success)
+            {
+                return Ok(result);
+            }
+            return BadRequest(result);
+        }
+
+
+
+
+        
 
         //[HttpGet]
         //public List<Product> Get()
@@ -44,9 +66,9 @@ namespace WebAPI.Controllers
 
 
 
-            //IProductService productService = new ProductManager(new EfProductDal());
-            //var result = productService.GetAll();
-            //return result.Data;
+        //    IProductService productService = new ProductManager(new EfProductDal());
+        //    var result = productService.GetAll();
+        //    return result.Data;
         //}
     }
 }
